@@ -1,0 +1,32 @@
+---
+import { siteData } from "../../data/siteData";
+
+const { hero } = siteData;
+---
+
+<div id="home" class="@container mb-12">
+    <div
+        class="flex min-h-[400px] flex-col gap-6 bg-cover bg-center bg-no-repeat rounded-xl items-center justify-center p-8 text-center"
+        data-alt="Abstract dark blue and purple digital landscape"
+        style='background-image: linear-gradient(rgba(10, 10, 10, 0.7) 0%, rgba(10, 10, 10, 0.8) 100%), url("/matrix-bg.png");'
+    >
+        <div class="flex flex-col gap-4 max-w-2xl">
+            <h1
+                class="text-4xl md:text-6xl font-black leading-tight tracking-tight reveal bg-gradient-to-r from-white via-primary to-blue-400 bg-clip-text text-transparent"
+            >
+                {hero.title}
+            </h1>
+            <p class="text-slate-300 text-base md:text-lg reveal delay-100">
+                {hero.description}
+            </p>
+        </div>
+        <div class="flex gap-4 reveal delay-200">
+            <a
+                href="#contact"
+                class="bg-primary text-white h-12 px-8 rounded-lg font-bold text-base shadow-lg shadow-primary/20 hover:scale-105 transition-transform flex items-center justify-center cursor-pointer"
+            >
+                {hero.ctaPrimary}
+            </a>
+        </div>
+    </div>
+</div>

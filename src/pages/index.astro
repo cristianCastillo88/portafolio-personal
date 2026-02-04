@@ -1,0 +1,46 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Navbar from "../components/sections/Navbar.astro";
+import Hero from "../components/sections/Hero.astro";
+import Services from "../components/sections/Services.astro";
+import About from "../components/sections/About.astro";
+import Portfolio from "../components/sections/Portfolio.astro";
+import Contact from "../components/Contact.astro";
+import Footer from "../components/sections/Footer.astro";
+import WhatsAppButton from "../components/WhatsAppButton.astro";
+---
+
+<Layout title="Development Services Overview">
+	<div
+		class="relative flex h-auto w-full flex-col group/design-root overflow-x-hidden"
+	>
+		<div class="layout-container flex h-full grow flex-col">
+			<Navbar />
+			<main
+				class="max-w-[1200px] mx-auto w-full px-4 md:px-10 pt-28 pb-10"
+			>
+				<Hero />
+				<Services />
+				<About />
+				<Portfolio />
+				<div id="contact" class="reveal">
+					<Contact />
+				</div>
+			</main>
+			<Footer />
+		</div>
+	</div>
+	<WhatsAppButton />
+
+	<script>
+		import { initScrollReveal } from "../scripts/reveal";
+		import { initNavbarScroll, initScrollSpy } from "../scripts/scrollSpy";
+		import { initTiltEffect } from "../scripts/tiltEffect";
+
+		// Initialize all effects
+		initScrollReveal();
+		initNavbarScroll();
+		initScrollSpy();
+		initTiltEffect();
+	</script>
+</Layout>
