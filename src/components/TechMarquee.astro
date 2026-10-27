@@ -5,13 +5,15 @@ interface Props {
 
 const {
     techs = [
-        "C#/.NET 8",
-        "Astro 5.0",
+        "C# / .NET 8",
+        "Clean Architecture",
+        "Astro 5 (SSR)",
         "MySQL",
         "React 18",
         "Tailwind CSS",
         "TypeScript",
         "SignalR",
+        "Entity Framework Core",
     ],
 } = Astro.props;
 
@@ -19,10 +21,10 @@ const duplicatedTechs = [...techs, ...techs];
 ---
 
 <div class="w-full overflow-hidden mask-fade relative py-2">
-    <div class="flex gap-4 animate-marquee w-max hover:pause">
+    <div class="flex gap-3 animate-marquee w-max hover:pause">
         {
             duplicatedTechs.map((tech) => (
-                <div class="px-4 py-2 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-lg font-medium text-sm whitespace-nowrap border border-slate-200 dark:border-slate-700 shadow-sm">
+                <div class="px-3.5 py-1.5 bg-slate-900 border border-slate-800 text-slate-300 rounded-md font-mono text-xs whitespace-nowrap hover:border-blue-500/50 hover:text-white transition-colors shadow-sm">
                     {tech}
                 </div>
             ))
@@ -32,7 +34,7 @@ const duplicatedTechs = [...techs, ...techs];
 
 <style>
     .animate-marquee {
-        animation: marquee 25s linear infinite;
+        animation: marquee 28s linear infinite;
     }
 
     .mask-fade {

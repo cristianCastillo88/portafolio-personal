@@ -4,103 +4,76 @@ import { siteData } from "../../data/siteData";
 const { services } = siteData;
 ---
 
-<div id="services" class="mb-16">
-    <h2
-        class="text-3xl font-bold mb-4 px-4 text-center bg-gradient-to-r from-primary via-blue-400 to-purple-400 bg-clip-text text-transparent animate-gradient bg-[length:200%_auto] hover:scale-105 transition-transform duration-300 cursor-default reveal"
-    >
-        Mis Servicios
-    </h2>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 p-4">
-        <div
-            class="tilt-card flex flex-col gap-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#1c2331] p-6 hover:-translate-y-2 hover:shadow-xl transition-all duration-300 reveal delay-100"
-        >
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="text-primary size-10"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-            >
-                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
-                <line x1="8" y1="21" x2="16" y2="21"></line>
-                <line x1="12" y1="17" x2="12" y2="21"></line>
-            </svg>
-            <div>
-                <h3
-                    class="text-slate-900 dark:text-white text-xl font-bold mb-2"
-                >
-                    {services[0].title}
-                </h3>
-                <p
-                    class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed"
-                >
-                    {services[0].description}
-                </p>
+<section id="services" class="mb-24 reveal">
+    <div class="mb-10 text-center md:text-left">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-blue-950/60 border border-blue-800/50 text-blue-400 text-xs font-mono font-medium uppercase tracking-wider mb-3">
+            <span>[ ESPECIALIDADES TÉCNICAS ]</span>
+        </div>
+        <h2 class="text-3xl md:text-4xl font-bold tracking-tight text-white font-display">
+            Áreas de Ingeniería & Soluciones
+        </h2>
+        <p class="text-slate-400 text-sm md:text-base mt-2 max-w-2xl">
+            Enfoque en desarrollo de software de misión crítica, arquitecturas desacopladas y aplicaciones preparadas para escalar.
+        </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Tarjeta 1: Backend & APIs -->
+        <div class="tilt-card rounded-xl border border-slate-800 bg-gradient-to-b from-[#111827] to-[#0D131F] p-7 hover:border-blue-500/50 hover:shadow-xl hover:shadow-blue-950/30 transition-all duration-300 relative overflow-hidden group">
+            <div class="flex items-center justify-between mb-5">
+                <div class="size-10 rounded-lg bg-blue-600/10 border border-blue-500/30 flex items-center justify-center text-blue-400 group-hover:text-blue-300 group-hover:border-blue-400/60 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+                        <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
+                        <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
+                    </svg>
+                </div>
+                <span class="font-mono text-xs text-slate-500">01 // BACKEND</span>
             </div>
+            <h3 class="text-white text-lg font-bold mb-2.5 group-hover:text-blue-200 transition-colors">
+                {services[0].title}
+            </h3>
+            <p class="text-slate-400 text-sm leading-relaxed">
+                {services[0].description}
+            </p>
         </div>
 
-        <div
-            class="tilt-card flex flex-col gap-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#1c2331] p-6 hover:-translate-y-2 hover:shadow-xl transition-all duration-300 reveal delay-200"
-        >
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="text-primary size-10"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-            >
-                <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
-                <line x1="12" y1="18" x2="12.01" y2="18"></line>
-            </svg>
-            <div>
-                <h3
-                    class="text-slate-900 dark:text-white text-xl font-bold mb-2"
-                >
-                    {services[1].title}
-                </h3>
-                <p
-                    class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed"
-                >
-                    {services[1].description}
-                </p>
+        <!-- Tarjeta 2: Tiempo Real & Distribuidos -->
+        <div class="tilt-card rounded-xl border border-slate-800 bg-gradient-to-b from-[#111827] to-[#0D131F] p-7 hover:border-blue-500/50 hover:shadow-xl hover:shadow-blue-950/30 transition-all duration-300 relative overflow-hidden group">
+            <div class="flex items-center justify-between mb-5">
+                <div class="size-10 rounded-lg bg-blue-600/10 border border-blue-500/30 flex items-center justify-center text-blue-400 group-hover:text-blue-300 group-hover:border-blue-400/60 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
+                    </svg>
+                </div>
+                <span class="font-mono text-xs text-slate-500">02 // REAL-TIME</span>
             </div>
+            <h3 class="text-white text-lg font-bold mb-2.5 group-hover:text-blue-200 transition-colors">
+                {services[1].title}
+            </h3>
+            <p class="text-slate-400 text-sm leading-relaxed">
+                {services[1].description}
+            </p>
         </div>
 
-        <div
-            class="tilt-card flex flex-col gap-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#1c2331] p-6 hover:-translate-y-2 hover:shadow-xl transition-all duration-300 reveal delay-300"
-        >
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="text-primary size-10"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-            >
-                <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
-                <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
-                <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
-            </svg>
-            <div>
-                <h3
-                    class="text-slate-900 dark:text-white text-xl font-bold mb-2"
-                >
-                    {services[2].title}
-                </h3>
-                <p
-                    class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed"
-                >
-                    {services[2].description}
-                </p>
+        <!-- Tarjeta 3: Frontend & Performance -->
+        <div class="tilt-card rounded-xl border border-slate-800 bg-gradient-to-b from-[#111827] to-[#0D131F] p-7 hover:border-blue-500/50 hover:shadow-xl hover:shadow-blue-950/30 transition-all duration-300 relative overflow-hidden group">
+            <div class="flex items-center justify-between mb-5">
+                <div class="size-10 rounded-lg bg-blue-600/10 border border-blue-500/30 flex items-center justify-center text-blue-400 group-hover:text-blue-300 group-hover:border-blue-400/60 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                        <line x1="8" y1="21" x2="16" y2="21"></line>
+                        <line x1="12" y1="17" x2="12" y2="21"></line>
+                    </svg>
+                </div>
+                <span class="font-mono text-xs text-slate-500">03 // FRONTEND</span>
             </div>
+            <h3 class="text-white text-lg font-bold mb-2.5 group-hover:text-blue-200 transition-colors">
+                {services[2].title}
+            </h3>
+            <p class="text-slate-400 text-sm leading-relaxed">
+                {services[2].description}
+            </p>
         </div>
     </div>
-</div>
+</section>

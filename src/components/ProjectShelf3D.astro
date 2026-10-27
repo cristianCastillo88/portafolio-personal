@@ -1,0 +1,451 @@
+---
+import { siteData, type ProjectData } from "../data/siteData";
+import ProjectGallery from "./ProjectGallery.astro";
+
+const { projects } = siteData;
+---
+
+<div id="project-shelf-container" class="relative w-full py-8 select-none">
+    <!-- Header de la sección de proyectos -->
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 border-b border-slate-800/80 pb-6">
+        <div>
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-blue-950/60 border border-blue-800/50 text-blue-400 text-xs font-mono font-medium uppercase tracking-wider mb-3">
+                <span class="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse"></span>
+                <span>Estantería de Proyectos // 3D Interactive Rack</span>
+            </div>
+            <h2 class="text-3xl md:text-4xl font-bold tracking-tight text-white font-display">
+                Proyectos & Arquitectura
+            </h2>
+            <p class="text-slate-400 text-sm md:text-base mt-2 max-w-xl">
+                Navega por las fichas técnicas tridimensionales para inspeccionar la arquitectura, patrones de diseño y decisiones de ingeniería de cada desarrollo.
+            </p>
+        </div>
+
+        <!-- Controles de navegación de la estantería -->
+        <div class="flex items-center gap-3">
+            <div class="font-mono text-xs text-slate-400 bg-slate-900/80 px-3 py-2 rounded-lg border border-slate-800">
+                <span id="shelf-current-index" class="text-blue-400 font-bold">01</span>
+                <span class="text-slate-600"> / </span>
+                <span class="text-slate-500">0{projects.length}</span>
+            </div>
+
+            <div class="flex items-center gap-2">
+                <button
+                    id="shelf-prev-btn"
+                    aria-label="Proyecto anterior"
+                    class="p-2.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:border-blue-600/60 hover:bg-slate-800 transition-all cursor-pointer active:scale-95"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+                    </svg>
+                </button>
+                <button
+                    id="shelf-next-btn"
+                    aria-label="Siguiente proyecto"
+                    class="p-2.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:border-blue-600/60 hover:bg-slate-800 transition-all cursor-pointer active:scale-95"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pestañas de acceso rápido a los proyectos -->
+    <div class="flex items-center gap-2 mb-8 overflow-x-auto pb-2 scrollbar-none">
+        {projects.map((project, index) => (
+            <button
+                class="shelf-tab-btn flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-mono font-medium border transition-all cursor-pointer whitespace-nowrap"
+                data-project-index={index}
+                class:list={[
+                    index === 0
+                        ? "bg-blue-600/15 border-blue-500/60 text-blue-300 shadow-sm shadow-blue-500/10"
+                        : "bg-slate-900/50 border-slate-800 text-slate-400 hover:text-slate-200 hover:border-slate-700"
+                ]}
+            >
+                <span class="text-slate-500">[{project.spineCode}]</span>
+                <span>{project.title}</span>
+                {project.status === "En Producción" && (
+                    <span class="size-1.5 rounded-full bg-emerald-400"></span>
+                )}
+            </button>
+        ))}
+    </div>
+
+    <!-- Escenario 3D de la Estantería -->
+    <div class="relative w-full min-h-[380px] md:min-h-[440px] flex items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-b from-slate-950 via-[#0B111E] to-[#080C14] border border-slate-800/80 p-6 md:p-12 perspective-stage">
+        <!-- Luz cenital de estudio de ingeniería -->
+        <div class="absolute -top-24 left-1/2 -translate-x-1/2 w-3/4 h-48 bg-blue-600/10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <!-- Plataforma física de la estantería (Suelo reflectante 3D) -->
+        <div class="absolute bottom-6 md:bottom-10 left-8 right-8 h-12 bg-gradient-to-r from-transparent via-slate-800/40 to-transparent border-t border-slate-700/40 rounded-full pointer-events-none blur-[1px]"></div>
+        <div class="absolute bottom-4 md:bottom-8 left-12 right-12 h-6 bg-blue-500/5 rounded-full blur-xl pointer-events-none"></div>
+
+        <!-- Contenedor 3D de los tomos de la estantería -->
+        <div
+            id="shelf-3d-track"
+            class="relative w-full max-w-4xl h-[300px] md:h-[340px] flex items-center justify-center preserve-3d transition-transform duration-700 ease-out"
+        >
+            {projects.map((project, index) => {
+                const isFirst = index === 0;
+                return (
+                    <div
+                        class="shelf-book-item absolute w-[240px] sm:w-[280px] md:w-[320px] h-[300px] md:h-[340px] preserve-3d cursor-pointer transition-all duration-700 ease-out"
+                        data-index={index}
+                        id={`shelf-item-${index}`}
+                        style={isFirst ? "transform: translateX(0px) translateZ(50px) rotateY(-8deg); z-index: 30;" : "transform: translateX(180px) translateZ(-60px) rotateY(24deg); z-index: 10; opacity: 0.65;"}
+                    >
+                        <!-- Sombra volumétrica del libro sobre el estante -->
+                        <div class="absolute -bottom-6 left-2 right-2 h-6 bg-black/60 rounded-full blur-md transform rotateX(85deg) pointer-events-none transition-opacity duration-500"></div>
+
+                        <!-- Canto / Lomo tridimensional lateral izquierdo -->
+                        <div
+                            class="absolute top-0 bottom-0 left-0 w-[42px] bg-gradient-to-r from-slate-950 via-slate-900 to-slate-800 border-y border-l border-slate-700/70 rounded-l-md flex flex-col justify-between py-5 items-center font-mono text-[11px] text-slate-300 shadow-xl"
+                            style="transform-origin: left center; transform: rotateY(-90deg) translateX(-42px);"
+                        >
+                            <span class="text-blue-400 font-bold tracking-wider">{project.spineCode}</span>
+                            <span class="rotate-180 uppercase tracking-widest text-[10px] text-slate-400" style="writing-mode: vertical-rl;">
+                                {project.title}
+                            </span>
+                            <span class={`size-2 rounded-full ${project.status === 'En Producción' ? 'bg-emerald-400' : 'bg-amber-400'}`}></span>
+                        </div>
+
+                        <!-- Cara Frontal del Dossier / Caja de Proyecto -->
+                        <div
+                            class="shelf-card-face relative w-full h-full rounded-xl bg-gradient-to-b from-slate-900/95 via-[#101726]/95 to-slate-950/95 border border-slate-700/80 shadow-2xl p-5 flex flex-col justify-between overflow-hidden group hover:border-blue-500/60 transition-colors"
+                        >
+                            <!-- Glow interior sutil -->
+                            <div class="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-transparent to-transparent opacity-60 pointer-events-none"></div>
+
+                            <!-- Header de la tarjeta -->
+                            <div class="relative z-10 flex items-center justify-between border-b border-slate-800/80 pb-3">
+                                <span class="font-mono text-[11px] text-blue-400 tracking-wider">
+                                    SYS // {project.spineCode}
+                                </span>
+                                <span class={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-mono font-medium ${
+                                    project.status === 'En Producción'
+                                        ? 'bg-emerald-950/70 text-emerald-300 border border-emerald-800/60'
+                                        : 'bg-amber-950/70 text-amber-300 border border-amber-800/60'
+                                }`}>
+                                    <span class={`size-1.5 rounded-full ${project.status === 'En Producción' ? 'bg-emerald-400' : 'bg-amber-400'}`}></span>
+                                    {project.status}
+                                </span>
+                            </div>
+
+                            <!-- Vista previa miniatura / Portada -->
+                            <div class="relative z-10 my-3 rounded-lg overflow-hidden border border-slate-800 aspect-video bg-slate-950 flex items-center justify-center group-hover:border-slate-700 transition-colors">
+                                <img
+                                    src={project.coverImage}
+                                    alt={project.title}
+                                    class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                                    loading="lazy"
+                                />
+                                <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-transparent to-transparent"></div>
+                                <div class="absolute bottom-2 left-2 right-2 text-left">
+                                    <span class="text-[10px] font-mono text-slate-400 uppercase tracking-wider block">Tipo de Sistema</span>
+                                    <span class="text-xs font-semibold text-white truncate block">{project.type}</span>
+                                </div>
+                            </div>
+
+                            <!-- Título y detalles breves -->
+                            <div class="relative z-10 space-y-2">
+                                <div>
+                                    <h3 class="text-xl font-bold text-white group-hover:text-blue-300 transition-colors">
+                                        {project.title}
+                                    </h3>
+                                    <p class="text-xs text-slate-400 line-clamp-2 mt-0.5">
+                                        {project.subtitle}
+                                    </p>
+                                </div>
+
+                                <div class="pt-2 border-t border-slate-800/80 flex items-center justify-between text-xs font-mono text-slate-400">
+                                    <span>CLICK PARA ENFOCAR</span>
+                                    <span class="text-blue-400">→</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            })}
+        </div>
+
+        <!-- Indicador de interacción 3D para el usuario -->
+        <div class="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-2 text-[11px] font-mono text-slate-500 pointer-events-none">
+            <svg xmlns="http://www.w3.org/2000/svg" class="size-3.5 text-blue-400/80" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+            </svg>
+            <span>Usa las flechas o haz clic en un proyecto para extraerlo</span>
+        </div>
+    </div>
+
+    <!-- Panel de Especificaciones Técnicas del Proyecto Activo -->
+    <div class="mt-8">
+        {projects.map((project, index) => (
+            <div
+                class="shelf-spec-panel transition-all duration-500"
+                data-spec-index={index}
+                class:list={[index === 0 ? "block opacity-100" : "hidden opacity-0"]}
+            >
+                <div class="bg-gradient-to-b from-[#111827] to-[#0D131F] border border-slate-800 rounded-2xl p-6 md:p-10 shadow-2xl relative overflow-hidden">
+                    <!-- Glow decorativo superior -->
+                    <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-600 via-sky-400 to-transparent"></div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                        <!-- Columna izquierda: Información central y arquitectura -->
+                        <div class="lg:col-span-7 space-y-6">
+                            <div>
+                                <div class="flex items-center gap-3 mb-2">
+                                    <span class="font-mono text-xs text-blue-400 font-semibold uppercase tracking-wider">
+                                        Ficha Técnica // {project.spineCode}
+                                    </span>
+                                    <span class="size-1 rounded-full bg-slate-600"></span>
+                                    <span class="text-xs font-mono text-slate-400">{project.type}</span>
+                                </div>
+                                <h3 class="text-2xl md:text-3xl font-bold text-white font-display">
+                                    {project.title}
+                                </h3>
+                                <p class="text-sm md:text-base text-blue-300 font-medium mt-1">
+                                    {project.subtitle}
+                                </p>
+                            </div>
+
+                            <p class="text-slate-300 text-sm md:text-base leading-relaxed">
+                                {project.description}
+                            </p>
+
+                            <!-- Métricas clave de ingeniería -->
+                            {project.metrics && (
+                                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 py-4 border-y border-slate-800">
+                                    {project.metrics.map(metric => (
+                                        <div class="bg-slate-900/70 border border-slate-800/80 rounded-lg p-3">
+                                            <span class="text-[11px] font-mono text-slate-400 block uppercase tracking-wider">{metric.label}</span>
+                                            <span class="text-sm md:text-base font-bold text-white font-mono mt-0.5 block">{metric.value}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+
+                            <!-- Aspectos destacados / Arquitectura -->
+                            <div>
+                                <h4 class="text-xs font-mono uppercase tracking-wider text-slate-400 mb-3 flex items-center gap-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="size-4 text-blue-400" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd" />
+                                    </svg>
+                                    Aspectos de Ingeniería & Robustez:
+                                </h4>
+                                <ul class="space-y-2.5">
+                                    {project.features.map(feature => (
+                                        <li class="flex items-start gap-2.5 text-xs md:text-sm text-slate-300">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="size-4 text-blue-400 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+                                            </svg>
+                                            <span>{feature}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Columna derecha: Stack técnico y disparador de galería -->
+                        <div class="lg:col-span-5 space-y-6 lg:border-l lg:border-slate-800 lg:pl-8">
+                            <!-- Tecnologías utilizadas -->
+                            <div>
+                                <h4 class="text-xs font-mono uppercase tracking-wider text-slate-400 mb-3">
+                                    Stack de Tecnologías:
+                                </h4>
+                                <div class="flex flex-wrap gap-2">
+                                    {project.technologies.map(tech => (
+                                        <span class="px-2.5 py-1 rounded-md text-xs font-mono bg-slate-900 border border-slate-800 text-slate-300 hover:border-blue-500/50 hover:text-white transition-colors">
+                                            {tech}
+                                        </span>
+                                    ))}
+                                </div>
+                            </div>
+
+                            <!-- Módulo de captura / Galería interactiva -->
+                            {project.galleryImages && project.galleryImages.length > 0 ? (
+                                <div class="space-y-3">
+                                    <h4 class="text-xs font-mono uppercase tracking-wider text-slate-400">
+                                        Evidencia Visual ({project.galleryImages.length} Capturas):
+                                    </h4>
+                                    <div class="h-44 rounded-xl overflow-hidden border border-slate-700/80 relative shadow-lg">
+                                        <ProjectGallery
+                                            projectTitle={project.title}
+                                            coverImage={project.coverImage}
+                                            galleryImages={project.galleryImages}
+                                        />
+                                    </div>
+                                    <p class="text-[11px] font-mono text-slate-400 text-center">
+                                        Haz clic en la imagen para abrir la galería completa a pantalla completa
+                                    </p>
+                                </div>
+                            ) : (
+                                <div class="p-6 rounded-xl border border-dashed border-slate-800 bg-slate-900/30 text-center space-y-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="size-8 mx-auto text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                                    </svg>
+                                    <p class="text-xs font-mono text-slate-400">
+                                        Dossier en fase de documentación técnica
+                                    </p>
+                                    <span class="inline-block text-[10px] font-mono text-amber-400 bg-amber-950/60 border border-amber-800/40 px-2.5 py-0.5 rounded">
+                                        Próxima publicación
+                                    </span>
+                                </div>
+                            )}
+
+                            <!-- Botones de Enlace / Acciones -->
+                            <div class="pt-2 flex flex-col sm:flex-row gap-3">
+                                {project.liveUrl && (
+                                    <a
+                                        href={project.liveUrl}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        class="flex-1 py-2.5 px-4 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-medium text-xs font-mono text-center transition-colors shadow-lg shadow-blue-600/20"
+                                    >
+                                        Ver Demo en Vivo ↗
+                                    </a>
+                                )}
+                                {project.githubUrl && (
+                                    <a
+                                        href={project.githubUrl}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        class="flex-1 py-2.5 px-4 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 hover:text-white font-medium text-xs font-mono text-center transition-colors"
+                                    >
+                                        Código en GitHub ↗
+                                    </a>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        ))}
+    </div>
+</div>
+
+<script>
+    function setup3DProjectShelf() {
+        const totalItems = document.querySelectorAll(".shelf-book-item").length;
+        if (totalItems === 0) return;
+
+        let currentIndex = 0;
+
+        const prevBtn = document.getElementById("shelf-prev-btn");
+        const nextBtn = document.getElementById("shelf-next-btn");
+        const indexCounter = document.getElementById("shelf-current-index");
+        const tabBtns = document.querySelectorAll<HTMLButtonElement>(".shelf-tab-btn");
+        const bookItems = document.querySelectorAll<HTMLElement>(".shelf-book-item");
+        const specPanels = document.querySelectorAll<HTMLElement>(".shelf-spec-panel");
+
+        function updateShelf(newIndex: number) {
+            if (newIndex < 0) newIndex = totalItems - 1;
+            if (newIndex >= totalItems) newIndex = 0;
+
+            currentIndex = newIndex;
+
+            // Actualizar contador numérico
+            if (indexCounter) {
+                indexCounter.textContent = `0${currentIndex + 1}`;
+            }
+
+            // Actualizar posición 3D de cada libro en el estante
+            bookItems.forEach((book, idx) => {
+                const diff = idx - currentIndex;
+
+                if (diff === 0) {
+                    // Tomo enfocado / extraído hacia adelante
+                    book.style.transform = "translateX(0px) translateZ(60px) rotateY(-8deg)";
+                    book.style.zIndex = "30";
+                    book.style.opacity = "1";
+                    book.classList.add("ring-1", "ring-blue-500/40");
+                } else if (diff > 0) {
+                    // Proyectos a la derecha en la estantería
+                    const xOffset = 180 + (diff - 1) * 120;
+                    const zOffset = -60 - (diff - 1) * 40;
+                    book.style.transform = `translateX(${xOffset}px) translateZ(${zOffset}px) rotateY(24deg)`;
+                    book.style.zIndex = `${20 - diff}`;
+                    book.style.opacity = "0.6";
+                    book.classList.remove("ring-1", "ring-blue-500/40");
+                } else {
+                    // Proyectos a la izquierda en la estantería
+                    const xOffset = -180 + (diff + 1) * 120;
+                    const zOffset = -60 + (diff + 1) * 40;
+                    book.style.transform = `translateX(${xOffset}px) translateZ(${zOffset}px) rotateY(-30deg)`;
+                    book.style.zIndex = `${20 + diff}`;
+                    book.style.opacity = "0.6";
+                    book.classList.remove("ring-1", "ring-blue-500/40");
+                }
+            });
+
+            // Actualizar pestañas activas
+            tabBtns.forEach((tab, idx) => {
+                if (idx === currentIndex) {
+                    tab.classList.remove("bg-slate-900/50", "border-slate-800", "text-slate-400");
+                    tab.classList.add("bg-blue-600/15", "border-blue-500/60", "text-blue-300", "shadow-sm", "shadow-blue-500/10");
+                } else {
+                    tab.classList.remove("bg-blue-600/15", "border-blue-500/60", "text-blue-300", "shadow-sm", "shadow-blue-500/10");
+                    tab.classList.add("bg-slate-900/50", "border-slate-800", "text-slate-400");
+                }
+            });
+
+            // Actualizar paneles de especificaciones técnicas con fade suave
+            specPanels.forEach((panel, idx) => {
+                if (idx === currentIndex) {
+                    panel.classList.remove("hidden");
+                    setTimeout(() => {
+                        panel.classList.remove("opacity-0");
+                        panel.classList.add("opacity-100");
+                    }, 20);
+                } else {
+                    panel.classList.remove("opacity-100");
+                    panel.classList.add("opacity-0");
+                    setTimeout(() => {
+                        panel.classList.add("hidden");
+                    }, 300);
+                }
+            });
+        }
+
+        // Event listeners
+        prevBtn?.addEventListener("click", () => updateShelf(currentIndex - 1));
+        nextBtn?.addEventListener("click", () => updateShelf(currentIndex + 1));
+
+        tabBtns.forEach((tab) => {
+            tab.addEventListener("click", () => {
+                const targetIdx = parseInt(tab.dataset.projectIndex || "0", 10);
+                updateShelf(targetIdx);
+            });
+        });
+
+        bookItems.forEach((book) => {
+            book.addEventListener("click", () => {
+                const targetIdx = parseInt(book.dataset.index || "0", 10);
+                updateShelf(targetIdx);
+            });
+        });
+
+        // Soporte para flechas del teclado cuando la estantería está en pantalla
+        window.addEventListener("keydown", (e) => {
+            const shelf = document.getElementById("project-shelf-container");
+            if (!shelf) return;
+            const rect = shelf.getBoundingClientRect();
+            const isInView = rect.top < window.innerHeight && rect.bottom > 0;
+            if (!isInView) return;
+
+            if (e.key === "ArrowLeft") {
+                updateShelf(currentIndex - 1);
+            } else if (e.key === "ArrowRight") {
+                updateShelf(currentIndex + 1);
+            }
+        });
+
+        // Inicializar estado
+        updateShelf(0);
+    }
+
+    // Inicializar al cargar y en transiciones de página de Astro
+    document.addEventListener("DOMContentLoaded", setup3DProjectShelf);
+    document.addEventListener("astro:page-load", setup3DProjectShelf);
+</script>

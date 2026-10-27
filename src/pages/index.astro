@@ -10,9 +10,9 @@ import Footer from "../components/sections/Footer.astro";
 import WhatsAppButton from "../components/WhatsAppButton.astro";
 ---
 
-<Layout title="Development Services Overview">
+<Layout title="Cristian Castillo | Software Engineer — .NET & Arquitectura Web">
 	<div
-		class="relative flex h-auto w-full flex-col group/design-root overflow-x-hidden"
+		class="relative flex h-auto w-full flex-col group/design-root overflow-x-hidden bg-[#0B0F17]"
 	>
 		<div class="layout-container flex h-full grow flex-col">
 			<Navbar />
@@ -20,12 +20,10 @@ import WhatsAppButton from "../components/WhatsAppButton.astro";
 				class="max-w-[1200px] mx-auto w-full px-4 md:px-10 pt-28 pb-10"
 			>
 				<Hero />
+				<Portfolio />
 				<Services />
 				<About />
-				<Portfolio />
-				<div id="contact" class="reveal">
-					<Contact />
-				</div>
+				<Contact />
 			</main>
 			<Footer />
 		</div>
